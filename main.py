@@ -37,6 +37,7 @@ telegram_app = Application.builder().token(TELEGRAM_TOKEN).build()
 # =========================
 
 async def ask_gpt(text: str) -> str:
+    print("🔥 ĐANG GỌI GROQ")
     response = await groq_client.chat.completions.create(
         model="openai/gpt-oss-120b",
         messages=[
