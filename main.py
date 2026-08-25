@@ -15,7 +15,7 @@ TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 
-WEBHOOK_URL = os.environ["WEBHOOK_URL"]
+WEBHOOK_URL = os.environ["RENDER_EXTERNAL_URL"]
 
 # =========================
 # CLIENTS
