@@ -1,5 +1,6 @@
 import os
 import asyncio
+from config import GPT_PERSONALITY, GEMINI_PERSONALITY
 from fastapi import FastAPI, Request
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
@@ -35,12 +36,7 @@ telegram_app = Application.builder().token(TELEGRAM_TOKEN).build()
 async def ask_gpt(text: str) -> str:
     response = await openai_client.responses.create(
         model="gpt-5-mini",
-        instructions=(
-            "Bạn là ChatGPT trong một group Telegram. "
-            "Nói chuyện tự nhiên bằng tiếng Việt, thân thiện, ngắn gọn. "
-            "Dùng cách xưng hô 't' và 'm'. "
-            "Có thể pha chút hài hước nhưng vẫn phải trả lời chính xác."
-        ),
+        instructions=GPT_PERSONALITY,
         input=text
     )
 
@@ -56,11 +52,10 @@ async def ask_gemini(text: str) -> str:
         gemini_client.models.generate_content,
         model="gemini-2.5-flash",
         contents=(
-            "Bạn đang nói chuyện trong group Telegram với người dùng Việt Nam. "
-            "Nói chuyện tự nhiên, thân thiện, xưng hô 't' và 'm'. "
-            "Trả lời ngắn gọn nhưng hữu ích.\n\n"
-            f"Người dùng: {text}"
-        )
+    GEMINI_PERSONALITY
+    + "\n\n"
+    + f"Người dùng: {text}"
+)
     )
 
     return response.text
