@@ -12,7 +12,7 @@ from google import genai
 # =========================
 
 TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 
 WEBHOOK_URL = os.environ["RENDER_EXTERNAL_URL"]
@@ -21,7 +21,10 @@ WEBHOOK_URL = os.environ["RENDER_EXTERNAL_URL"]
 # CLIENTS
 # =========================
 
-openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+groq_client = AsyncOpenAI(
+    api_key=GROQ_API_KEY,
+    base_url="https://api.groq.com/openai/v1"
+)
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
 app = FastAPI()
@@ -34,14 +37,21 @@ telegram_app = Application.builder().token(TELEGRAM_TOKEN).build()
 # =========================
 
 async def ask_gpt(text: str) -> str:
-    response = await openai_client.responses.create(
-        model="gpt-5-mini",
-        instructions=GPT_PERSONALITY,
-        input=text
+    response = await groq_client.chat.completions.create(
+        model="openai/gpt-oss-120b",
+        messages=[
+            {
+                "role": "system",
+                "content": GPT_PERSONALITY
+            },
+            {
+                "role": "user",
+                "content": text
+            }
+        ]
     )
 
-    return response.output_text
-
+    return response.choices[0].message.content
 
 # =========================
 # GEMINI
