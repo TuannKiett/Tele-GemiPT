@@ -50,7 +50,7 @@ async def ask_gpt(text: str) -> str:
 async def ask_gemini(text: str) -> str:
     response = await asyncio.to_thread(
         gemini_client.models.generate_content,
-        model="gemini-2.5-flash",
+        model="gemini-3.6-flash",
         contents=(
     GEMINI_PERSONALITY
     + "\n\n"
